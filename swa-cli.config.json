@@ -1,0 +1,16 @@
+{
+  "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
+  "configurations": {
+    "smoggy-saturn": {
+      "appLocation": ".",
+      "apiLocation": "api",
+      "outputLocation": "_site",
+      "apiLanguage": "dotnetisolated",
+      "apiVersion": "6.0",
+      "appBuildCommand": "npm run build",
+      "apiBuildCommand": "dotnet publish -c Release",
+      "run": "npm run dev",
+      "appDevserverUrl": "http://localhost:4321"
+    }
+  }
+}
