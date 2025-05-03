@@ -9,7 +9,7 @@ export default function GraphComponent() {
 
   useEffect(() => {
     fetch('/api/getme')
-      .then(res => res.json())
+      .then(res => res.text())
       .then(data => setUser(data));
   }, []);
 
