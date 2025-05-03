@@ -4,13 +4,15 @@
     "smoggy-saturn": {
       "appLocation": ".",
       "apiLocation": "api",
-      "outputLocation": "_site",
+      "outputLocation": "dist",
       "apiLanguage": "dotnetisolated",
       "apiVersion": "6.0",
       "appBuildCommand": "npm run build",
       "apiBuildCommand": "dotnet publish -c Release",
       "run": "npm run dev",
-      "appDevserverUrl": "http://localhost:4321"
+      "appDevserverUrl": "http://localhost:4321",
+      "appName": "smoggy-saturn",
+      "resourceGroup": "smoggy-saturn-rg"
     }
   }
 }

@@ -9,5 +9,5 @@ export default function GraphComponent() {
       .then(data => setUser(data[0]));
   }, []);
 
-  return user ? <p>Hello {user}</p> : <p>Loading...</p>;
+  return user ? <p>Astro on {user}</p> : <p>Loading...</p>;
 }
