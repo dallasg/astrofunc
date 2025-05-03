@@ -17,16 +17,16 @@ namespace Company.Function
             _logger = logger;
         }
 
-        [Function("callgraph")]
+        [Function("getme")]
         public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
             // string userAccessToken = req.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-            // string clientId = Environment.GetEnvironmentVariable("CLIENT_ID")!;
-            // string clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET")!;
-            // string tenantId = Environment.GetEnvironmentVariable("TENANT_ID")!;
+            string clientId = Environment.GetEnvironmentVariable("CLIENT_ID")!;
+            string clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET")!;
+            string tenantId = Environment.GetEnvironmentVariable("TENANT_ID")!;
 
             // var oboCredential = new OnBehalfOfCredential(
             //     tenantId,
@@ -35,13 +35,15 @@ namespace Company.Function
             //     userAccessToken
             // );
 
+            // var graphClient = new GraphServiceClient();
+
             // var graphClient = new GraphServiceClient(oboCredential);
 
             // var me = await graphClient.Me.GetAsync();
 
             // return new OkObjectResult(me);
 
-            return new OkObjectResult("Azure Functions");
+            return new OkObjectResult(clientId);
         }
     }
 }
