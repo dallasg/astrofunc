@@ -5,13 +5,13 @@ import { msalConfig } from '../msalConfig';
 const msalInstance = new PublicClientApplication(msalConfig);
 
 export default function GraphComponent() {
-  const [backend, setBackend] = useState("");
+  const [user, setUser] = useState("");
 
   useEffect(() => {
     fetch('/api/getme')
-      .then(res => res.text())
-      .then(data => setBackend(data));
+      .then(res => res.json())
+      .then(data => setUser(data));
   }, []);
 
-  return backend ? <p>Astro on {backend}</p> : <p>Loading...</p>;
+  return user ? <p>Hello {user}</p> : <p>Loading...</p>;
 }
