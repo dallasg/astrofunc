@@ -28,14 +28,12 @@ namespace Company.Function
             string clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET")!;
             string tenantId = Environment.GetEnvironmentVariable("TENANT_ID")!;
 
-            var oboCredential = new OnBehalfOfCredential(
-                tenantId,
-                clientId,
-                clientSecret,
-                userAccessToken
-            );
+            var scopes = new[] { "User.Read" };
+            var oboToken = req.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-            var graphClient = new GraphServiceClient(oboCredential);
+            var credential = new OnBehalfOfCredential(tenantId, clientId, clientSecret, oboToken);
+
+            var graphClient = new GraphServiceClient(credential, scopes);
 
             var me = await graphClient.Me.GetAsync();
 
