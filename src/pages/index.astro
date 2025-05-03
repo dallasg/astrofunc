@@ -1,6 +1,5 @@
 ---
-var res = await (await fetch('http://localhost:4280/api/getme')).text();
-console.log(res);
+import GraphComponent from '../components/GraphComponent';
 ---
 
 <html lang="en">
@@ -12,6 +11,6 @@ console.log(res);
 		<title>Astro</title>
 	</head>
 	<body>
-		<h1>{res}</h1>
+		<GraphComponent client:load />
 	</body>
 </html>
