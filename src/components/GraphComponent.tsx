@@ -7,17 +7,8 @@ const msalInstance = new PublicClientApplication(msalConfig);
 export default async function GraphComponent() {
   const [user, setUser] = useState("");
 
-  const msalInstance = new PublicClientApplication(msalConfig);
-  const result = await msalInstance.loginPopup({ scopes: ["User.Read"] });
-  const accessToken = (await msalInstance.acquireTokenSilent({
-    scopes: ["User.Read"],
-    account: result.account,
-  })).accessToken;
-
   useEffect(() => {
-    fetch('/api/getme', {headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }})
+    fetch('/api/getme')
       .then(res => res.text())
       .then(data => setUser(data));
   }, []);
