@@ -21,6 +21,11 @@ public class HttpTrigger1
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
 
+        foreach (var header in req.Headers)
+        {
+            _logger.LogInformation("{Key}: {Value}", header.Key, header.Value);
+        }
+
         string clientId = Environment.GetEnvironmentVariable("CLIENT_ID")!;
         string clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET")!;
         string tenantId = Environment.GetEnvironmentVariable("TENANT_ID")!;
