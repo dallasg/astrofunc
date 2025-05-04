@@ -23,7 +23,7 @@ public class HttpTrigger1
 
         foreach (var header in req.Headers)
         {
-            _logger.LogInformation("{Key}: {Value}", header.Key, header.Value);
+            _logger.LogInformation("Header: {Key}: {Value}", header.Key, header.Value);
         }
 
         string clientId = Environment.GetEnvironmentVariable("CLIENT_ID")!;
@@ -31,7 +31,7 @@ public class HttpTrigger1
         string tenantId = Environment.GetEnvironmentVariable("TENANT_ID")!;
 
         // 1. Extract ID token from incoming headers
-        var userToken = req.Headers["X-MS-TOKEN-AAD-ID-TOKEN"].FirstOrDefault();
+        var userToken = req.Headers["X-MS-AUTH-TOKEN"].FirstOrDefault();
         // if (string.IsNullOrEmpty(userToken))
         //     return new UnauthorizedResult();
 
