@@ -18,7 +18,7 @@ namespace Company.Function
         }
 
         [Function("getme")]
-        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -31,23 +31,31 @@ namespace Company.Function
             var scopes = new[] { "User.Read" };
             var oboToken = req.Headers.Authorization.ToString().Replace("Bearer ", "");
 
-            var authorizationCode = "AUTH_CODE_FROM_REDIRECT";
+            return new OkObjectResult(oboToken);
 
-            // using Azure.Identity;
-            var options = new AuthorizationCodeCredentialOptions
-            {
-                AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
-            };
+            // var cca = ConfidentialClientApplicationBuilder
+            //     .Create(clientId)
+            //     .WithClientSecret(clientSecret)
+            //     .WithAuthority(new Uri($"https://login.microsoftonline.com/{tenantId}"))
+            //     .Build();
 
-            // https://learn.microsoft.com/dotnet/api/azure.identity.authorizationcodecredential
-            var authCodeCredential = new AuthorizationCodeCredential(
-                tenantId, clientId, clientSecret, authorizationCode, options);
+            // var authorizationCode = "AUTH_CODE_FROM_REDIRECT";
 
-            var graphClient = new GraphServiceClient(authCodeCredential, scopes);
+            // // using Azure.Identity;
+            // var options = new AuthorizationCodeCredentialOptions
+            // {
+            //     AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+            // };
 
-            var me = await graphClient.Me.GetAsync();
+            // // https://learn.microsoft.com/dotnet/api/azure.identity.authorizationcodecredential
+            // var authCodeCredential = new AuthorizationCodeCredential(
+            //     tenantId, clientId, clientSecret, authorizationCode, options);
 
-            return new OkObjectResult(me);
+            // var graphClient = new GraphServiceClient(authCodeCredential, scopes);
+
+            // var me = await graphClient.Me.GetAsync();
+
+            // return new OkObjectResult(me);
         }
     }
 }
