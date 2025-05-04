@@ -1,5 +1,8 @@
 {
-    "routes": [],
+    "routes": [{
+        "route": "/api/getme",
+        "allowedRoles": ["authenticated"]
+    }],
     "auth": {
         "identityProviders": {
             "azureActiveDirectory": {
