@@ -20,33 +20,13 @@ public class HttpTrigger1
     public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
+        var userToken = req.Headers["X-MS-AUTH-TOKEN"].ToString().Replace("Bearer ", "");
 
-        foreach (var header in req.Headers)
-        {
-            _logger.LogInformation("Header: {Key}: {Value}", header.Key, header.Value);
-        }
+        var authProvider = new TokenAuthenticationProvider(userToken);
+        var graphClient = new GraphServiceClient(authProvider);
 
-        string clientId = Environment.GetEnvironmentVariable("CLIENT_ID")!;
-        string clientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET")!;
-        string tenantId = Environment.GetEnvironmentVariable("TENANT_ID")!;
-
-        // 1. Extract ID token from incoming headers
-        var userToken = req.Headers["X-MS-AUTH-TOKEN"].FirstOrDefault();
-        // if (string.IsNullOrEmpty(userToken))
-        //     return new UnauthorizedResult();
-
-        var credential = new OnBehalfOfCredential(
-            tenantId,
-            clientId,
-            clientSecret,
-            userToken);
-
-        // 3. Create Graph client with required scopes
-        var graphClient = new GraphServiceClient(credential, ["https://graph.microsoft.com/.default"]);
-
-        // 4. Call Microsoft Graph
+        // Example: Get current user info
         var me = await graphClient.Me.GetAsync();
-
         return new OkObjectResult(me);
     }
 }
