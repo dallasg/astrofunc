@@ -35,8 +35,22 @@ public class HttpTrigger1
         {
             _logger.LogInformation("Initializing GraphServiceClient...");
 
-            var authProvider = new TokenAuthenticationProvider(token);
-            var graphClient = new GraphServiceClient(authProvider);
+            string userAccessToken = req.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+            var tenantId = Environment.GetEnvironmentVariable("TENANT_ID");
+            var clientId = Environment.GetEnvironmentVariable("AZURE_CLIENT_ID");
+            var clientSecret = Environment.GetEnvironmentVariable("AZURE_CLIENT_SECRET");
+            var userAssertionToken = userAccessToken;
+
+            var onBehalfOfCredential = new OnBehalfOfCredential(
+                tenantId,
+                clientId,
+                clientSecret,
+                userAssertionToken
+            );
+
+            var scopes = new[] { "https://graph.microsoft.com/.default" };
+            var graphClient = new GraphServiceClient(onBehalfOfCredential, scopes);
 
             _logger.LogInformation("Calling Microsoft Graph /me endpoint...");
 
