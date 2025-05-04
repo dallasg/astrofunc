@@ -8,7 +8,10 @@ export default async function GraphComponent() {
   const [user, setUser] = useState("");
 
   useEffect(() => {
-    fetch('/api/getme')
+    fetch('/api/getme', {
+        method: 'GET',
+        credentials: 'include'
+    })
       .then(res => res.text())
       .then(data => setUser(data));
   }, []);

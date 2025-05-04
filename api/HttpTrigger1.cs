@@ -1,12 +1,9 @@
-using System.Text;
-using System.Text.Json;
 using Azure.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
-using Microsoft.Identity.Client;
 
 namespace Company.Function;
 
@@ -30,8 +27,8 @@ public class HttpTrigger1
 
         // 1. Extract ID token from incoming headers
         var userToken = req.Headers["X-MS-TOKEN-AAD-ID-TOKEN"].FirstOrDefault();
-        if (string.IsNullOrEmpty(userToken))
-            return new UnauthorizedResult();
+        // if (string.IsNullOrEmpty(userToken))
+        //     return new UnauthorizedResult();
 
         var credential = new OnBehalfOfCredential(
             tenantId,
@@ -40,7 +37,7 @@ public class HttpTrigger1
             userToken);
 
         // 3. Create Graph client with required scopes
-        var graphClient = new GraphServiceClient(credential, new[] { "https://graph.microsoft.com/.default" });
+        var graphClient = new GraphServiceClient(credential, ["https://graph.microsoft.com/.default"]);
 
         // 4. Call Microsoft Graph
         var me = await graphClient.Me.GetAsync();
