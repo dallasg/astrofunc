@@ -17,16 +17,39 @@ public class HttpTrigger1
     }
 
     [Function("getme")]
-    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
+    public async Task<IActionResult> Run(
+    [HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
     {
-        _logger.LogInformation("C# HTTP trigger function processed a request.");
-        var userToken = req.Headers["X-MS-AUTH-TOKEN"].ToString().Replace("Bearer ", "");
+        _logger.LogInformation("Processing request for /getme.");
 
-        var authProvider = new TokenAuthenticationProvider(userToken);
-        var graphClient = new GraphServiceClient(authProvider);
+        // Extract Bearer token from custom header
+        if (!req.Headers.TryGetValue("X-MS-AUTH-TOKEN", out var authHeader) || string.IsNullOrWhiteSpace(authHeader))
+        {
+            _logger.LogWarning("Missing or empty X-MS-AUTH-TOKEN header.");
+            return new UnauthorizedResult();
+        }
 
-        // Example: Get current user info
-        var me = await graphClient.Me.GetAsync();
-        return new OkObjectResult(me);
+        var token = authHeader.ToString().Replace("Bearer ", "", StringComparison.OrdinalIgnoreCase);
+
+        try
+        {
+            _logger.LogInformation("Initializing GraphServiceClient...");
+
+            var authProvider = new TokenAuthenticationProvider(token);
+            var graphClient = new GraphServiceClient(authProvider);
+
+            _logger.LogInformation("Calling Microsoft Graph /me endpoint...");
+
+            var me = await graphClient.Me.GetAsync();
+
+            _logger.LogInformation("Successfully retrieved user: {DisplayName} ({UserPrincipalName})", me?.DisplayName, me?.UserPrincipalName);
+
+            return new OkObjectResult(me);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while processing /getme request.");
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
     }
 }
